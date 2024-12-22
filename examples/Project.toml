@@ -1,0 +1,9 @@
+[deps]
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+Ferrite = "c061ca5d-56c9-439f-9c0e-210fe06d3992"
+FerriteGmsh = "4f95f4f8-b27c-4ae5-9a39-ea55e634e36b"
+FerriteTriangulation = "b200c708-61b9-46d9-917a-515144ac7aac"
+GeometryBasics = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
+Gmsh = "705231aa-382f-11e9-3f0c-b7cb4346fdeb"
+PlotUtils = "995b91a9-d308-5afd-9ec6-746e21dbc043"
+Tensors = "48a634ad-e948-5137-8d70-aa71f2a747f4"
