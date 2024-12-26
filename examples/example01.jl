@@ -13,7 +13,7 @@ dh = close!(add!(DofHandler(grid), :u, ip))
 a = zeros(ndofs(dh))
 apply_analytical!(a, dh, :u, x -> x ⋅ x)
 
-tr = Triangulation(dh, 2)
+tr = Triangulation(dh, 3)
 
 data = create_data(tr, grid, a, (ip,))
 

@@ -1,4 +1,4 @@
-using FerriteTriangulation: Triangulation, SubTriangulation
+using FerriteTriangulation: Triangulation, SubTriangulation, get_data_indicies
 
 function _create_data!(f, data, grid, a, cvs, subtria::SubTriangulation)
     c1 = first(subtria.faces)[1]
@@ -11,9 +11,9 @@ function _create_data!(f, data, grid, a, cvs, subtria::SubTriangulation)
         reinit!(cv, getcells(grid, cellnr), x)
         celldofs!(dofs, dh, cellnr)
         copyto!(ae, view(a, dofs))
-        node_idxs = subtria.face_nodes[i]:(subtria.face_nodes[i+1]-1)
+        data_idxs = get_data_indicies(subtria, i)
         for q_point in 1:getnquadpoints(cv)
-            data[node_idxs[q_point]] = f(function_value(cv, q_point, ae))
+            data[data_idxs[q_point]] = f(function_value(cv, q_point, ae))
         end
     end
 end

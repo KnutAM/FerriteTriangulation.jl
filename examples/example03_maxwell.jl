@@ -1,17 +1,3 @@
-# From https://web.pdx.edu/~gjay/pub/MaxwellGoodBadUgly.html
-#
-#  (-1,1)        G6              (1,1)
-#       +----------------------+  
-#       |                      |
-#       |                      | G4
-#       |        (0,0)         |
-#    G3 |           +----------+ (1,0)
-#       |           |     G2
-#       |           |G1
-#       |    G5     |
-#       +-----------+
-#  (-1,-1)       (0,-1)
-#
 
 using Ferrite, Tensors
 using Gmsh, FerriteGmsh
@@ -63,7 +49,7 @@ grid = setup_grid(0.05)
 ip = DiscontinuousLagrange{RefTriangle, 1}()^2
 dh = close!(add!(DofHandler(grid), :u, ip))
 
-function foo(x::Vec{2})
+function foo(x::Vec{2}) # Analytical solution
     Δθ = -3π/4 # Rotate to 4th quadrant 
     xp = rotate(x, Δθ)
     r = sqrt(x ⋅ x + eps())
@@ -73,17 +59,6 @@ end
 
 a = zeros(ndofs(dh))
 
-function bar(x::Vec{2})
-    Δθ = -3π/4 # Rotate to 4th quadrant 
-    xp = rotate(x, Δθ)
-    r = sqrt(x ⋅ x + eps())
-    θ = r ≤ 1e-6 ? zero(eltype(x)) : (atan(xp[2], xp[1]) + Δθ)
-    return (2/3)*Vec(
-            (cos(θ)*sin(2θ/3) - sin(θ)*cos(2θ/3)), 
-            (cos(θ)*cos(2θ/3) + sin(θ)*sin(2θ/3))) * r^(-1//3)
-end
-
-# apply_analytical!(a, dh, :u, bar)
 apply_analytical!(a, dh, :u, x -> gradient(foo, x))
 
 tr = Triangulation(dh, 2)

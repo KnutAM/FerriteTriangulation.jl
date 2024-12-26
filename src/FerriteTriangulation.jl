@@ -4,11 +4,16 @@ using Ferrite
 using Tensors
 
 include("CellTriangulation.jl")
+
 struct SubTriangulation
     faces::Vector{FaceIndex}
     sdh::SubDofHandler
     rules::Vector{CellTriangulation}
     face_nodes::Vector{Int} # face_nodes[i]:(face_nodes[i+1]-1) gives the node ids of faces[i]
+end
+
+function get_data_indicies(subtria::SubTriangulation, facenr::Int)
+    return subtria.face_nodes[facenr]:(subtria.face_nodes[facenr + 1] - 1)
 end
 
 struct Triangulation{sdim, T}
