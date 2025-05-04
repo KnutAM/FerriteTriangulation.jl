@@ -52,24 +52,24 @@ end
 
 function _triangulate!(nodes::Vector{<:Vec}, triangles::Vector{Int}, edges, tri_edges, grid::Ferrite.AbstractGrid, ipg::ScalarInterpolation, faces::Vector{FaceIndex}, rule::Vector)
     frule_hints = first(rule)
-    node_offset = length(nodes)
-    sizehint!(nodes, node_offset + length(Ferrite.getpoints(frule_hints)) * length(faces))
+    node_offset = Ref(length(nodes)) # Ref avoids boxed value
+    sizehint!(nodes, node_offset[] + length(Ferrite.getpoints(frule_hints)) * length(faces))
     tria_offset = length(triangles)
     sizehint!(triangles, tria_offset + length(gettriangles(frule_hints)) * length(faces) * 3)
     face_nodes = Vector{Int}(undef, length(faces) + 1)
     cell_coords = getcoordinates(grid, first(first(faces)))
     sizehint!(edges, length(edges) + length(faces) * length(getedge(frule_hints)))
     sizehint!(tri_edges, length(tri_edges) + length(faces))
-    face_nodes[1] = node_offset + 1
+    face_nodes[1] = node_offset[] + 1
     for (i, (cellnr, facenr)) in enumerate(faces)
         getcoordinates!(cell_coords, grid, cellnr)
         frule = rule[facenr]
         append!(nodes, spatial_coordinate(ipg, ξ, cell_coords) for ξ in Ferrite.getpoints(frule))
-        append!(triangles, node_offset + n for n in gettriangles(frule))
-        append!(edges, node_offset + n for n in getedge(frule))
+        append!(triangles, node_offset[] + n for n in gettriangles(frule))
+        append!(edges, node_offset[] + n for n in getedge(frule))
         push!(tri_edges, length(edges) + 1)
-        node_offset += length(Ferrite.getpoints(frule))
-        face_nodes[i + 1] = node_offset + 1
+        node_offset[] += length(Ferrite.getpoints(frule))
+        face_nodes[i + 1] = node_offset[] + 1
     end
     return face_nodes
 end

@@ -1,10 +1,15 @@
 # A CellTriangulation triangulates a face on a reference cell. If non-triangular,
 # we start by splitting it into triangles. Triangles are then recursively refined.
+# TODO: This should rather be `FaceTriangulation`, 
+# potentially contained inside `FaceTriangulations`. 
+# Might also make sense then to have `FaceValues` in a similar fashion to `FacetValues`. 
 """
     CellTriangulation{RefShape, T}(refinement_levels::Int)
 
 A `CellTriangulation` defines how a standard cell can be represented by a triangulation of linear
-triangles, suitable for visualization. This can also be used as a QuadratureRule in a
+triangles, suitable for visualization. Essientially, each vertex of the triangulation of the cell 
+consists of points, ξ, in the reference coordinate system of the cell. 
+This can also be used as a QuadratureRule in a
 CellValues object, in order to evaluate a function for each vertex of its triangles. However, the
 integration weights will be NaN, and should not be used.
 """
