@@ -11,9 +11,8 @@ function _create_data!(f, data, grid, a, cvs, subtria::SubTriangulation)
         reinit!(cv, getcells(grid, cellnr), x)
         celldofs!(dofs, dh, cellnr)
         copyto!(ae, view(a, dofs))
-        data_idxs = get_data_indicies(subtria, i)
-        for q_point in 1:getnquadpoints(cv)
-            data[data_idxs[q_point]] = f(function_value(cv, q_point, ae))
+        for (i_point, i_data) in enumerate(get_data_indicies(subtria, i))
+            data[i_data] = f(function_value(cv, i_point, ae))
         end
     end
 end
